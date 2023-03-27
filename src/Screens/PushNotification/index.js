@@ -14,6 +14,10 @@ import {
   remove,
 } from "firebase/database";
 import { useNavigate, useNavigation } from "react-router-dom";
+import { getMessaging } from "firebase/messaging";
+import axios from "axios";
+
+let messaging = getMessaging(app)
 
 const PushNotification = () => {
   const db = getDatabase(app);
@@ -22,50 +26,73 @@ const PushNotification = () => {
     pushNotificationText: '',
   }
   const [pushNotification, setPushNotification] = useState(initialData);
+  console.log('pushNotification', pushNotification);
   const navigate = useNavigate()
   const handlePushNotification = () => {
-    const reference = dbRef(db, `PushNotification/`);
-    push(reference, pushNotification)
-      .then(() => {
-        alert("Submit Successfully!");
-        setPushNotification(initialData)
-
+    fetch('https://shy-rose-bee-gown.cyclic.app/api/sendNotification', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'AAAAZxqXbNk:APA91bHdE5eQ6ABVGWF0d30YlCxdPzb2IMZ7SEe8As0M_PqcZRi0xD7iO89k6SFb8pff_m27Z6h31RlAaJe40ipxPEbZKpk9mkOgir954LXQCiX3z2-ZmOmC3j5rtF6IYUrC51-gD4uB'
+      },
+      body: JSON.stringify({
+        notification: {
+          title: pushNotification.pushNotificationTitle,
+          body: pushNotification.pushNotificationText,
+        },
+        topic: 'allDevices'
       })
-      .catch((err) => {
-        alert(err);
-      });
+    }).then((res) => {
+
+      let data = res?.body
+
+      alert(data?.message)
+      setPushNotification(initialData)
+    }).catch((error) => {
+      console.log(error)
+    })
+      ;
   }
 
-  const [pushNotificationData, setPushNotificationData] = useState([])
-  useEffect(() => {
-    const getData = dbRef(db, `PushNotification/`);
-    onValue(getData, (e) => {
-      const val = e.val();
-      const valData = []
-      const data = Object.entries(val).map(([key, value]) => {
-        return {
-          data: value,
-          id: key
-        }
+  // firebaseAdmin.messaging().sendToTopic('all_users', initialData)
+  //   .then((response) => {
+  //     axios.post('https://192.168.10.20:5000/api/sendNotification', response)
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error sending notification:', error);
+  //   });
 
-      });
-      setPushNotificationData(data);
-    });
-  }, []);
 
-  const deletePushNotificationData = (id, i) => {
-    const deleteLink = dbRef(db, `PushNotification/${id}`);
-    remove(deleteLink)
-      .then((deleted) => {
-        alert("successfully deleted");
-      })
-      .catch((err) => alert("GOT THE ERROR ON DELETE", err));
-    setPushNotificationData(
-      pushNotificationData.filter((item, index) => {
-        return index !== i;
-      })
-    );
-  }
+  // const [pushNotificationData, setPushNotificationData] = useState([])
+  // useEffect(() => {
+  //   const getData = dbRef(db, `PushNotification/`);
+  //   onValue(getData, (e) => {
+  //     const val = e.val();
+  //     const valData = []
+  //     const data = Object.entries(val).map(([key, value]) => {
+  //       return {
+  //         data: value,
+  //         id: key
+  //       }
+
+  //     });
+  //     setPushNotificationData(data);
+  //   });
+  // }, []);
+
+  // const deletePushNotificationData = (id, i) => {
+  //   const deleteLink = dbRef(db, `PushNotification/${id}`);
+  //   remove(deleteLink)
+  //     .then((deleted) => {
+  //       alert("successfully deleted");
+  //     })
+  //     .catch((err) => alert("GOT THE ERROR ON DELETE", err));
+  //   setPushNotificationData(
+  //     pushNotificationData.filter((item, index) => {
+  //       return index !== i;
+  //     })
+  //   );
+  // }
 
   return (
     <>
@@ -81,10 +108,23 @@ const PushNotification = () => {
 
             <input
               className="form-control form__input"
-              maxlength="25"
-              placeholder="Push Notification"
+              // maxlength="25"
+              placeholder="Notification Title"
+              value={pushNotification.pushNotificationTitle}
+              onChange={(e) => setPushNotification({ ...pushNotification, pushNotificationTitle: e.target.value })}
+            />
+
+          </Form.Group>
+        </Col>
+        <Col lg="12">
+          <div style={{ color: "#222536" }}></div>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+
+            <input
+              className="form-control form__input"
+              placeholder="Notification body"
               value={pushNotification.pushNotificationText}
-              onChange={(e) => setPushNotification(e.target.value)}
+              onChange={(e) => setPushNotification({ ...pushNotification, pushNotificationText: e.target.value })}
             />
 
           </Form.Group>
@@ -97,7 +137,7 @@ const PushNotification = () => {
           Submit
         </button>
 
-        {pushNotificationData &&
+        {/* {pushNotificationData &&
           <Table style={{ marginTop: 20 }} striped bordered hover>
             <thead>
               <tr>
@@ -128,7 +168,7 @@ const PushNotification = () => {
               );
             })}
           </Table>
-        }
+        } */}
       </Container>
     </>
   );
