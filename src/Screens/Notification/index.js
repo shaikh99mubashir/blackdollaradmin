@@ -62,7 +62,6 @@ const Notification = () => {
                 title="Notification"
                 style={{ color: "#d47617", fontSize: 30, fontWeight: "bold" }}
             />
-
             <Container>
                 <Col lg="12">
                     <div style={{ color: "#222536" }}></div>
