@@ -179,29 +179,6 @@ const Slidebar = (props) => {
                 </button>
               </div>
             </Link>
-            <Link to="/Support" style={{ textDecoration: "none" }}>
-              <div style={{ marginBottom: 20 }}>
-                <button
-                  className="sliderButton"
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    alignItems: "center",
-                    gap: 10,
-                    borderRadius: 5,
-                  }}
-                >
-                  {" "}
-                  <MdOutlineContactSupport
-                    id="sliderIcon"
-                    color="white"
-                    size={20}
-                  />
-                  <span style={{ fontSize: 20 }}>Support</span>{" "}
-                </button>
-              </div>
-            </Link>
             <Link to="/Marquee" style={{ textDecoration: "none" }}>
               <div style={{ marginBottom: 20 }}>
                 <button
@@ -225,6 +202,74 @@ const Slidebar = (props) => {
                 </button>
               </div>
             </Link>
+            <Link to="/DailyHistory" style={{ textDecoration: "none" }}>
+              <div style={{ marginBottom: 20 }}>
+                <button
+                  className="sliderButton"
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignItems: "center",
+                    gap: 10,
+                    borderRadius: 5,
+                  }}
+                >
+                  <MdOutlineContactSupport
+                    id="sliderIcon"
+                    color="white"
+                    size={20}
+                  />
+                  <span style={{ fontSize: 20 }}>Daily History</span>{" "}
+                </button>
+              </div>
+            </Link>
+            <Link to="/Notification" style={{ textDecoration: "none" }}>
+              <div style={{ marginBottom: 20 }}>
+                <button
+                  className="sliderButton"
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignItems: "center",
+                    gap: 10,
+                    borderRadius: 5,
+                  }}
+                >
+                  <MdOutlineContactSupport
+                    id="sliderIcon"
+                    color="white"
+                    size={20}
+                  />
+                  <span style={{ fontSize: 20 }}>Notification</span>
+                </button>
+              </div>
+            </Link>
+            <Link to="/Support" style={{ textDecoration: "none" }}>
+              <div style={{ marginBottom: 20 }}>
+                <button
+                  className="sliderButton"
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    alignItems: "center",
+                    gap: 10,
+                    borderRadius: 5,
+                  }}
+                >
+                  {" "}
+                  <MdOutlineContactSupport
+                    id="sliderIcon"
+                    color="white"
+                    size={20}
+                  />
+                  <span style={{ fontSize: 20 }}>Support</span>{" "}
+                </button>
+              </div>
+            </Link>
+
           </div>
 
           <div onClick={logoutUser} style={{ marginBottom: 20 }}>

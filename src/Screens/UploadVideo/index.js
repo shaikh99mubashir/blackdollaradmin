@@ -216,12 +216,6 @@ const UploadVideo = () => {
               />
 
               <br />
-
-              {/* <Form.Check
-                type="switch"
-                id="custom-switch"
-                label="Check this switch"
-              /> */}
               <button
                 className="button-sub px-4"
                 type="submit"
