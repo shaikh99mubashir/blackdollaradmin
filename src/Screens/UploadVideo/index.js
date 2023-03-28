@@ -113,10 +113,6 @@ const UploadVideo = () => {
     }
   };
 
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => {
-    setIsEnabled(previousState => !previousState);
-  };
   return (
     <>
       <Slidebar
