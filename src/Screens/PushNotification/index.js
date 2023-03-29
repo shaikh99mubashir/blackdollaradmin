@@ -26,7 +26,6 @@ const PushNotification = () => {
     pushNotificationText: '',
   }
   const [pushNotification, setPushNotification] = useState(initialData);
-  console.log('pushNotification', pushNotification);
   const navigate = useNavigate()
   const handlePushNotification = () => {
     fetch('https://shy-rose-bee-gown.cyclic.app/api/sendNotification', {

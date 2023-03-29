@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap';
 import Slidebar from '../Slidebar'
 import app from "../../FirebaseConfig/Config";
@@ -30,6 +30,9 @@ const DailyHistory = () => {
             [name + i]: value,
         });
     };
+    console.log('History', history);
+
+
 
     const fields = [];
     for (let i = 1; i <= numFields; i++) {

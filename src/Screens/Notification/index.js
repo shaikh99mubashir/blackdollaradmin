@@ -15,45 +15,53 @@ import {
 } from "firebase/database";
 import { useNavigate, useNavigation } from "react-router-dom";
 
+
 const Notification = () => {
     const db = getDatabase(app);
-    const [marquee, setMarquee] = useState({
+    const initialData = {
         marqueeText: '',
-    });
-    const navigate = useNavigate()
+        title: ''
+    }
+    const [marquee, setMarquee] = useState(initialData);
     const handleMarqueeSubmit = () => {
         const reference = dbRef(db, `Notification/`);
         push(reference, marquee)
             .then(() => {
                 alert("Submit Successfully!");
-                navigate('/Dashboard')
+                setMarquee(initialData)
             })
             .catch((err) => {
                 alert(err);
             });
     }
 
-    const [marqueeData, setMarqueeData] = useState()
+    const [marqueeData, setMarqueeData] = useState([])
     useEffect(() => {
         const getData = dbRef(db, `Notification/`);
         onValue(getData, (e) => {
             const val = e.val();
             const data = Object.entries(val).map(([key, value]) => {
-                val.id = key
-                val.data = value
+                return {
+                    ...value,
+                    id: key,
+                };
             });
-            setMarqueeData(val);
+            setMarqueeData(data);
         });
     }, []);
 
-    const deleteVideoLink = (id) => {
+    const deleteVideoLink = (id, i) => {
         const deleteMarquee = dbRef(db, `Notification/${id}`);
         remove(deleteMarquee)
             .then((deleted) => {
                 alert("successfully deleted!")
-                navigate('/Dashboard')
             })
             .catch((err) => alert("GOT THE ERROR ON DELETE", err));
+        setMarqueeData(
+            marqueeData.filter((item, index) => {
+                return index !== i;
+            })
+        );
     }
 
     return (
@@ -67,23 +75,45 @@ const Notification = () => {
                     <div style={{ color: "#222536" }}></div>
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         {
-                            marqueeData ?
+                            marqueeData && marqueeData.length > 0 ?
                                 <input
                                     className="form-control form__input"
-                                    placeholder="Headline Text"
+                                    placeholder="Title"
                                     disabled
                                 />
                                 :
                                 <input
                                     className="form-control form__input"
-                                    placeholder="Headline Text"
-                                    onChange={(e) => setMarquee(e.target.value)}
+                                    placeholder="Title"
+                                    value={marquee.title}
+                                    maxLength={35}
+                                    onChange={(e) => setMarquee({ ...marquee, title: e.target.value })}
+                                />
+                        }
+                    </Form.Group>
+                </Col>
+                <Col lg="12">
+                    <div style={{ color: "#222536" }}></div>
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        {
+                            marqueeData && marqueeData.length > 0 ?
+                                <input
+                                    className="form-control form__input"
+                                    placeholder="Notification"
+                                    disabled
+                                />
+                                :
+                                <textarea
+                                    className="form-control form__input"
+                                    placeholder="Notification"
+                                    maxLength={200}
+                                    onChange={(e) => setMarquee({ ...marquee, marqueeText: e.target.value })}
                                 />
                         }
                     </Form.Group>
                 </Col>
                 {
-                    marqueeData ?
+                    marqueeData && marqueeData.length > 0 ?
                         <button
                             className="button-sub px-4"
                             type="submit"
@@ -101,32 +131,37 @@ const Notification = () => {
                         </button>
                 }
 
-                {marqueeData &&
+                {marqueeData.length > 0 &&
                     <Table style={{ marginTop: 20 }} striped bordered hover>
                         <thead>
                             <tr>
                                 <th>S.no</th>
+                                <th>Title</th>
                                 <th>Headline</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
+                        {marqueeData.map((e, i) => {
+                            return (
+                                <tbody key={i}>
+                                    <tr>
+                                        <td style={{ textAlign: "-webkit-center" }}>{i + 1}</td>
+                                        <td>{e.title}</td>
+                                        <td>{e.marqueeText}</td>
 
-                        <tbody>
-                            <tr>
-                                <td>01</td>
-                                <td>{marqueeData && marqueeData.data}</td>
+                                        <td style={{ textAlign: "-webkit-center" }}>
+                                            <button
+                                                style={{ border: "none" }}
+                                                onClick={() => deleteVideoLink(e.id, i)}
+                                            >
+                                                <AiFillDelete size={25} />
+                                            </button>
+                                        </td>
 
-                                <td style={{ textAlign: "-webkit-center" }}>
-                                    <button
-                                        style={{ border: "none" }}
-                                        onClick={() => deleteVideoLink(marqueeData.id)}
-                                    >
-                                        <AiFillDelete size={25} />
-                                    </button>
-                                </td>
-
-                            </tr>
-                        </tbody>
+                                    </tr>
+                                </tbody>
+                            )
+                        })}
                     </Table>
                 }
             </Container>
